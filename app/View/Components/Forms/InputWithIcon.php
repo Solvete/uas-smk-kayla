@@ -8,17 +8,27 @@ use Illuminate\View\Component;
 
 class InputWithIcon extends Component
 {
+    public string $label;
+    public string $name;
+    public string $type;
+    public string $placeholder;
+    public ?string $icon;
+
     /**
      * Create a new component instance.
      */
     public function __construct(
-        public string $label,
-        public string $name,
-        public string $type,
-        public string $placeholder,
-        public string $icon,
+        string $label,
+        string $name,
+        string $type = 'text',
+        string $placeholder = '', // ✅ JADI OPTIONAL (INI KUNCI)
+        ?string $icon = null      // ✅ OPTIONAL
     ) {
-        //
+        $this->label = $label;
+        $this->name = $name;
+        $this->type = $type;
+        $this->placeholder = $placeholder;
+        $this->icon = $icon;
     }
 
     /**

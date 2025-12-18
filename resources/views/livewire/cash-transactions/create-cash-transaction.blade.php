@@ -1,62 +1,123 @@
 <div>
-  <div wire:ignore.self data-bs-backdrop="static" class="modal fade" id="createModal" tabindex="-1"
-    aria-labelledby="createModalLabel" aria-hidden="true">
+  <div wire:ignore.self data-bs-backdrop="static" class="modal fade" id="createModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
+
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="createModalLabel">Tambah Data Transaksi Kas</h1>
-          <button wire:loading.attr="disabled" type="button" class="btn-close" data-bs-dismiss="modal"
-            aria-label="Close"></button>
+          <h1 class="modal-title fs-5">Tambah Data Transaksi SPP</h1>
+          <button wire:loading.attr="disabled" type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
+
         <div class="modal-body">
           <form wire:submit="save">
+
             <div class="row">
+
+              {{-- PILIH PELAJAR --}}
               <div wire:ignore class="col-md-6">
-                <x-forms.select-with-icon wire:model.blur="form.student_ids" label="Pilih Pelajar"
-                  name="form.student_ids" icon="bi bi-people-fill" multiple>
+                <x-forms.select-with-icon 
+                    wire:model.blur="form.student_ids" 
+                    label="Pilih Pelajar"
+                    name="form.student_ids"
+                    icon="bi bi-people-fill"
+                    multiple
+                >
                   @foreach ($students as $student)
-                  <option value="{{ $student->id }}">{{ $student->identification_number }} - {{ $student->name }}
-                  </option>
+                    <option value="{{ $student->id }}">
+                      {{ $student->identification_number }} - {{ $student->name }}
+                    </option>
                   @endforeach
                 </x-forms.select-with-icon>
-                <div class="form-text">Pilih 1 atau lebih pelajar di atas.</div>
               </div>
 
-              <div class="col-sm-12 col-md-6">
-                <x-forms.input-with-icon wire:model.blur="form.amount" label="Tagihan" name="form.amount"
-                  placeholder="Masukan tagihan.." type="number" icon="bi bi-cash" />
+              {{-- KATEGORI PEMBAYARAN --}}
+              <div class="col-md-6">
+                <label class="form-label fw-bold">Kategori Pembayaran</label>
+                <select 
+                    wire:model.live="form.payment_category_id"
+                    class="form-select @error('form.payment_category_id') is-invalid @enderror"
+                >
+                  <option value="">-- Pilih Kategori --</option>
+                  @foreach ($paymentCategories as $category)
+                    <option value="{{ $category->id }}">
+                      {{ $category->name }} - Rp{{ number_format($category->price, 0, ',', '.') }}
+                    </option>
+                  @endforeach
+                </select>
 
-                <div class="mb-3">
-                  <label for="date_paid" class="form-label">Pilih Tanggal:</label>
-                  <input wire:model.blur="form.date_paid" type="date"
-                    class="form-control @error('form.date_paid') is-invalid @enderror" id="date_paid"
-                    placeholder="Masukan nominal tagihan..">
-                  <div>
-                    @error('form.date_paid')
-                    <div class="d-block invalid-feedback fw-bold">{{ $message }}</div>
-                    @enderror
-                  </div>
+                @error('form.payment_category_id')
+                  <div class="invalid-feedback fw-bold">{{ $message }}</div>
+                @enderror
+              </div>
+
+            </div>
+
+            <div class="row mt-3">
+
+              {{-- TAGIHAN OTOMATIS --}}
+              <div class="col-md-6">
+                <x-forms.input-with-icon 
+                    wire:model="form.amount"
+                    label="Tagihan (otomatis)"
+                    name="form.amount"
+                    type="number"
+                    icon="bi bi-cash"
+                    readonly
+                />
+              </div>
+
+              {{-- TANGGAL + CATATAN --}}
+              <div class="col-md-6">
+                <label class="form-label">Tanggal Bayar</label>
+                <input
+                    type="date"
+                    wire:model.blur="form.date_paid"
+                    class="form-control @error('form.date_paid') is-invalid @enderror"
+                >
+
+                @error('form.date_paid')
+                  <div class="invalid-feedback fw-bold">{{ $message }}</div>
+                @enderror
+
+                <x-forms.textarea-with-icon 
+                    class="mt-2"
+                    label="Catatan"
+                    name="form.transaction_note"
+                    icon="bi bi-card-text"
+                    wire:model.blur="form.transaction_note"
+                />
+              </div>
+
+              {{-- UPLOAD BUKTI BAYAR --}}
+              <div class="col-md-6"></div>
+              <div class="col-md-6 mt-3">
+                <label class="form-label fw-bold">Upload Bukti Bayar</label>
+                <input
+                    type="file"
+                    wire:model="form.payment_proof"
+                    class="form-control @error('form.payment_proof') is-invalid @enderror"
+                    accept="image/*"
+                >
+
+                <div wire:loading wire:target="form.payment_proof" class="text-muted">
+                  Mengupload file...
                 </div>
-                <x-forms.textarea-with-icon label="Catatan" name="form.transaction_note"
-                  placeholder="Masukan catatan.. (opsional)" icon="bi bi-card-text" cols="30" rows="5" />
+
+                @error('form.payment_proof')
+                  <div class="invalid-feedback fw-bold">{{ $message }}</div>
+                @enderror
               </div>
+
             </div>
 
             <div class="modal-footer">
-              <button wire:loading.attr="disabled" type="button" class="btn btn-secondary"
-                data-bs-dismiss="modal">Tutup</button>
-
-              <button wire:loading.remove type="submit" class="btn btn-primary">Simpan</button>
-
-              <div wire:loading wire:target="save">
-                <button class="btn btn-primary" type="button" disabled>
-                  <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-                  <span role="status">Menyimpan...</span>
-                </button>
-              </div>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+              <button type="submit" class="btn btn-primary">Simpan</button>
             </div>
+
           </form>
         </div>
+
       </div>
     </div>
   </div>

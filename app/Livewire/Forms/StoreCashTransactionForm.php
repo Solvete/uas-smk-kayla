@@ -3,77 +3,81 @@
 namespace App\Livewire\Forms;
 
 use App\Models\CashTransaction;
+use App\Models\PaymentCategory;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
+use Livewire\WithFileUploads;
 
 class StoreCashTransactionForm extends Form
 {
-    #[Validate]
-    public ?array $student_ids;
+    use WithFileUploads; // 🔥 WAJIB
 
-    public ?string $amount;
+    #[Validate('required|array|min:1')]
+    public ?array $student_ids = [];
 
+    #[Validate('required|exists:payment_categories,id')]
+    public ?int $payment_category_id = null;
+
+    #[Validate('required|numeric|min:0')]
+    public ?string $amount = '';
+
+    #[Validate('required|date')]
     public ?string $date_paid;
 
     public string $transaction_note = '';
 
+    #[Validate('nullable|file|mimes:jpg,jpeg,png,pdf|max:2048')]
+    public $payment_proof; // 🔥 WAJIB ADA
+
     /**
-     * Store a newly created resource in storage.
+     * Ketika kategori berubah → auto isi amount
+     */
+    public function updatedFormPaymentCategoryId($id): void
+    {
+        $category = PaymentCategory::find($id);
+        $this->amount = $category?->price ?? 0;
+    }
+
+    /**
+     * Store
      */
     public function store(): void
     {
         $this->validate();
 
+        $proofPath = null;
+
+        // 🔥 SIMPAN FILE
+        if ($this->payment_proof) {
+            $proofPath = $this->payment_proof
+                ->store('payment-proofs', 'public');
+        }
+
         $now = now();
-        $requests = collect($this->student_ids)->map(function ($studentID) use ($now) {
+
+        $requests = collect($this->student_ids)->map(function ($studentID) use ($now, $proofPath) {
             return [
-                'student_id' => $studentID,
-                'amount' => $this->amount,
-                'date_paid' => $this->date_paid,
-                'transaction_note' => $this->transaction_note,
-                'created_by' => Auth::id(),
-                'created_at' => $now,
-                'updated_at' => $now,
+                'student_id'          => $studentID,
+                'payment_category_id' => $this->payment_category_id,
+                'amount'              => $this->amount,
+                'date_paid'           => $this->date_paid,
+                'transaction_note'    => $this->transaction_note,
+                'payment_proof'       => $proofPath, // 🔥 DISIMPAN
+                'created_by'          => Auth::id(),
+                'created_at'          => $now,
+                'updated_at'          => $now,
             ];
         })->toArray();
 
         CashTransaction::insert($requests);
 
-        $this->reset(['student_ids', 'amount', 'transaction_note']);
-    }
-
-    /**
-     * Get the validation rules that apply to the request.
-     */
-    public function rules(): array
-    {
-        return [
-            'student_ids' => 'required|exists:students,id',
-            'amount' => 'required|numeric|min:0',
-            'date_paid' => 'required|date',
-            'transaction_note' => 'nullable|string|max:255',
-        ];
-    }
-
-    /**
-     * Get the error messages for the defined validation rules.
-     */
-    public function messages(): array
-    {
-        return [
-            'student_ids.required' => 'Pelajar tidak boleh kosong!',
-            'student_ids.exists' => 'Pelajar yang dipilih tidak valid!',
-
-            'amount.required' => 'Tagihan tidak boleh kosong!',
-            'amount.numeric' => 'Tagihan harus berupa angka!',
-            'amount.min' => 'Tagihan tidak boleh kurang dari 0!',
-
-            'date_paid.required' => 'Tanggal tidak boleh kosong!',
-            'date_paid.date' => 'Tanggal tidak valid!',
-
-            'transaction_note.string' => 'Catatan transaksi harus berupa teks!',
-            'transaction_note.max' => 'Catatan transaksi harus maksimal :max karakter!',
-        ];
+        $this->reset([
+            'student_ids',
+            'payment_category_id',
+            'amount',
+            'transaction_note',
+            'payment_proof',
+        ]);
     }
 }

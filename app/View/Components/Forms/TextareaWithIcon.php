@@ -8,16 +8,27 @@ use Illuminate\View\Component;
 
 class TextareaWithIcon extends Component
 {
+    public string $label;
+    public string $name;
+    public string $placeholder;
+    public ?string $icon;
+    public int $rows;
+
     /**
      * Create a new component instance.
      */
     public function __construct(
-        public string $label,
-        public string $name,
-        public string $placeholder,
-        public string $icon,
+        string $label,
+        string $name,
+        string $placeholder = '',   // ✅ OPTIONAL
+        ?string $icon = null,        // ✅ OPTIONAL
+        int $rows = 3                // ✅ DEFAULT
     ) {
-        //
+        $this->label = $label;
+        $this->name = $name;
+        $this->placeholder = $placeholder;
+        $this->icon = $icon;
+        $this->rows = $rows;
     }
 
     /**

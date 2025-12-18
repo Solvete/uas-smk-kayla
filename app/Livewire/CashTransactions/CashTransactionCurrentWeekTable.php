@@ -19,7 +19,7 @@ use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Title('Halaman Daftar Kas Minggu Ini')]
+#[Title('Halaman Daftar Pembayaran Minggu Ini')]
 class CashTransactionCurrentWeekTable extends Component
 {
     use WithPagination;

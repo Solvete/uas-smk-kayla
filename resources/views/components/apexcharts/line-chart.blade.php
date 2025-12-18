@@ -32,7 +32,7 @@
         enabled: false,
       },
       stroke: {
-        curve: "straight",
+        curve: "smooth",
       },
       grid: {
         row: {

@@ -26,7 +26,7 @@
       plotOptions: {
         pie: {
           donut: {
-            size: "30%",
+            size: "0%",
           },
         },
       },

@@ -79,24 +79,46 @@
     <div class="col-12">
       <div class="card">
         <div class="card-header text-center">
-          <h4>Filter Data dengan Rentang Tanggal</h4>
+          <h4>Filter Data</h4>
         </div>
         <div class="card-body">
           <div class="row">
-            <div class="col-sm-12 col-md-6">
-              <div class="mb-3">
-                <label for="start_date" class="form-label">Tanggal Awal:</label>
-                <input wire:model.live="start_date" type="date" class="form-control" id="start_date"
-                  placeholder="Pilih tanggal awal..">
-              </div>
-            </div>
-            <div class="col-sm-12 col-md-6">
-              <div class="mb-3">
-                <label for="end_date" class="form-label">Tanggal Akhir:</label>
-                <input wire:model.live="end_date" type="date" class="form-control" id="end_date"
-                  placeholder="Pilih tanggal akhir..">
-              </div>
-            </div>
+
+    {{-- FILTER BULAN --}}
+    <div class="col-md-4 mb-3">
+        <label class="form-label">Filter Bulan</label>
+        <input 
+            type="month" 
+            wire:model.live="selected_month" 
+            class="form-control"
+        >
+    </div>
+
+    {{-- FILTER TAHUN --}}
+    <div class="mb-3">
+    <label class="form-label">Filter Tahun</label>
+    <select wire:model.live="selected_year" class="form-select">
+        <option value="">-- Pilih Tahun --</option>
+
+        @for ($year = date('Y'); $year >= date('Y') - 10; $year--)
+            <option value="{{ $year }}">{{ $year }}</option>
+        @endfor
+    </select>
+</div>
+
+
+    {{-- TOMBOL RESET --}}
+    <div class="col-md-4 mb-3 d-flex align-items-end">
+        <button 
+            class="btn btn-secondary w-100" 
+            wire:click="resetFilters"
+        >
+            Reset Filter
+        </button>
+    </div>
+
+</div>
+
           </div>
           <div class="divider">
             <div class="divider-text fw-bold">Pilih menu filter di atas untuk mencari data</div>
@@ -107,7 +129,7 @@
             <div class="card-body">
               <button type="button" class="btn btn-danger btn-block btn-xl font-bold" data-bs-toggle="modal"
                 data-bs-target="#notPaidModal">
-                Ada <b>{{ $statistics['studentsNotPaidCount'] }}</b> orang belum membayar pada rentang tanggal tersebut!
+                Ada <b>{{ $statistics['studentsNotPaidCount'] }}</b> orang belum membayar pada rentang Waktu tersebut!
                 <i class="bi bi-exclamation-triangle"></i>
               </button>
               <div class="row text-center mt-3">

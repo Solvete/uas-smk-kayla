@@ -13,11 +13,25 @@ return new class extends Migration
     {
         Schema::create('cash_transactions', function (Blueprint $table) {
             $table->id();
+
+            // Relasi ke tabel students
             $table->foreignId('student_id')->constrained();
+
+            // ⭐ Kolom kategori (DITAMBAHKAN)
+            $table->foreignId('payment_category_id')->constrained('payment_categories', 'id');
+
+            // Nominal
             $table->bigInteger('amount');
+
+            // Tanggal bayar
             $table->date('date_paid');
+
+            // Catatan transaksi
             $table->text('transaction_note')->nullable();
+
+            // Dibuat oleh user
             $table->foreignId('created_by')->constrained('users', 'id');
+
             $table->timestamps();
         });
     }

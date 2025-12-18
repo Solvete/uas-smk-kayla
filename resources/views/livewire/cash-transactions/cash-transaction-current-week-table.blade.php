@@ -170,7 +170,7 @@
     <div class="col-12">
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title">Daftar Transaksi Kas Minggu Ini</h5>
+          <h5 class="card-title">Daftar Transaksi Minggu Ini</h5>
           <div class="d-flex flex-wrap justify-content-end mb-3 gap-3">
             <select wire:model.live="limit" class="form-select form-select-sm w-auto rounded">
               <option value="5">5</option>
@@ -306,19 +306,49 @@
                   </td>
                   <td>
                     <div class="btn-group gap-1" role="group">
-                      <button wire:loading.attr="disabled"
-                        wire:click="$dispatch('cash-transaction-edit', {cashTransaction: {{ $cashTransaction->id }}})"
-                        type="button" class="btn btn-sm btn-success rounded" data-bs-toggle="modal"
-                        data-bs-target="#editModal">
-                        <i class="bi bi-pencil-square"></i>
-                      </button>
-                      <button wire:loading.attr="disabled"
-                        wire:click="$dispatch('cash-transaction-delete', {cashTransaction: {{ $cashTransaction->id }}})"
-                        type="button" class="btn btn-sm btn-danger rounded" data-bs-toggle="modal"
-                        data-bs-target="#deleteModal">
-                        <i class="bi bi-trash-fill"></i>
-                      </button>
-                    </div>
+
+    {{-- EDIT --}}
+    <button wire:loading.attr="disabled"
+        wire:click="$dispatch('cash-transaction-edit', {cashTransaction: {{ $cashTransaction->id }}})"
+        type="button"
+        class="btn btn-sm btn-success rounded"
+        data-bs-toggle="modal"
+        data-bs-target="#editModal">
+        <i class="bi bi-pencil-square"></i>
+    </button>
+
+    {{-- DELETE --}}
+    <button wire:loading.attr="disabled"
+        wire:click="$dispatch('cash-transaction-delete', {cashTransaction: {{ $cashTransaction->id }}})"
+        type="button"
+        class="btn btn-sm btn-danger rounded"
+        data-bs-toggle="modal"
+        data-bs-target="#deleteModal">
+        <i class="bi bi-trash-fill"></i>
+    </button>
+
+    {{-- PRINT INVOICE --}}
+    <a href="{{ route('cash.receipt.download', $cashTransaction->id) }}"
+       target="_blank"
+       class="btn btn-sm btn-primary rounded">
+       <i class="bi bi-printer-fill"></i>
+    </a>
+
+    {{-- DOWNLOAD BUKTI BAYAR --}}
+  @if ($cashTransaction->payment_proof)
+    <a
+        href="{{ asset('storage/' . $cashTransaction->payment_proof) }}"
+        class="btn btn-sm btn-success"
+        target="_blank"
+        title="Download Bukti Bayar"
+    >
+        <i class="bi bi-download"></i>
+    </a>
+@endif
+
+
+</div>
+
                   </td>
                 </tr>
                 @empty

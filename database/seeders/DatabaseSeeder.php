@@ -17,7 +17,8 @@ class DatabaseSeeder extends Seeder
             SchoolClassSeeder::class,
             SchoolMajorSeeder::class,
             StudentSeeder::class,
-            CashTransactionSeeder::class,
+            PaymentCategorySeeder::class,
+            CashTransactionSeeder::class
         ]);
     }
 }

@@ -18,7 +18,8 @@ class Logout extends Component
         session()->invalidate();
         session()->regenerateToken();
 
-        $this->redirect(Login::class);
+        $this->redirect(\App\Livewire\Homepage::class);
+
     }
 
     /**

@@ -23,21 +23,15 @@ class Student extends Model
         'school_year_end',
     ];
 
-    /**
-     * Get the school class relationship.
-     */
-    public function schoolClass(): BelongsTo
-    {
-        return $this->belongsTo(SchoolClass::class);
-    }
+    public function schoolClass()
+{
+    return $this->belongsTo(SchoolClass::class, 'school_class_id');
+}
 
-    /**
-     * Get the school major relationship.
-     */
-    public function schoolMajor(): BelongsTo
-    {
-        return $this->belongsTo(SchoolMajor::class);
-    }
+public function schoolMajor()
+{
+    return $this->belongsTo(SchoolMajor::class, 'school_major_id');
+}
 
     /**
      * Get the cash transactions relationship.
