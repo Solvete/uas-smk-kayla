@@ -1,5 +1,5 @@
 <div class="min-vh-100 d-flex align-items-center justify-content-center position-relative" 
-     style="background: url('{{ asset('compiled/jpg/gedungmcp.jpg') }}') center/cover no-repeat;">
+     style="background: url('{{ asset('compiled/jpg/gedungmcp.png') }}') center/cover no-repeat;">
 
   <!-- Overlay hitam transparan -->
   <div class="position-absolute top-0 start-0 w-100 h-100" 
