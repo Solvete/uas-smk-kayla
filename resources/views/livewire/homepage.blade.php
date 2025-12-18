@@ -27,7 +27,7 @@
         <div class="container">
             <div class="row g-4 align-items-center">
                 <div class="col-md-6">
-                    <img src="{{ asset('compiled/jpg/gedungmcp.jpg') }}" class="img-fluid rounded shadow" alt="Gedung Sekolah">
+                    <img src="{{ asset('compiled/jpg/gedungmcp.png') }}" class="img-fluid rounded shadow" alt="Gedung Sekolah">
                 </div>
                 <div class="col-md-6">
                     <h3 class="fw-bold text-primary mb-3">Tentang Sekolah</h3>
